@@ -1,0 +1,134 @@
+<html lang="en">
+<head>
+    <title>JSnake</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <script src="https://lemonadejs.net/v1/lemonade.js"></script>
+
+    <div id="header">JSnake</div>
+    <div id="root"></div>
+    
+    <script type="text/javascript">
+
+    var self = {};
+        
+        function App() {
+            
+            const speed = 1;
+
+            var speedx = speedy = 0;
+            var pointx = pointy = 10;
+            var piecesSize = 20;
+            var pieces = 20;
+            var lemonadex = lemonadey = Math.floor(Math.random()*pieces);
+            var tail = 5;
+            var trail = [];
+            var context = null;
+        
+            self.init = function(stage){
+                context = stage.getContext("2d");
+
+                context.fillStyle = "#cecece";                
+                context.fillRect(0,0, stage.width, stage.height);
+
+                document.addEventListener("keydown", function (o){
+                    switch(o.keyCode){
+                    case 37: //left
+                        speedx = -speed;
+                        speedy = 0;
+                        break;
+                    case 38: //up
+                        speedx = 0;
+                        speedy = -speed;
+                        break;
+                    case 39: //right
+                        speedx = speed;
+                        speedy = 0;
+                        break;
+                    case 40: //down
+                        speedx = 0;
+                        speedy = speed;
+                        break;
+                    default:
+                        break;
+                    
+                    }
+                })
+
+                setInterval(self.game, 60);
+
+            }
+
+            self.reset = function(){
+
+                speedx = speedy = 0;
+                tail=5;
+                lemonadex = lemonadey = Math.floor(Math.random()*pieces);
+
+            }
+
+            self.game = function(){
+
+                pointx += speedx;
+                pointy += speedy;
+
+                if (pointx < 0) {
+                    pointx = pieces -1;
+                }
+                if (pointx > pieces-1) {
+                    pointx = 0;
+                }
+                if (pointy < 0) {
+                    pointy = pieces -1;
+                }
+                if (pointy > pieces-1) {
+                    pointy = 0;
+                }
+
+
+                context.fillStyle = "#cecece";                
+                context.fillRect(0,0, stage.width, stage.height);
+                
+                context.fillStyle = "green";
+                context.fillRect(lemonadex*piecesSize, lemonadey*piecesSize, piecesSize, piecesSize);
+
+                context.fillStyle = "#6b6b6b";
+                for (var i = 0; i < trail.length; i++){
+                    context.fillRect(trail[i].x*piecesSize, trail[i].y*piecesSize, piecesSize-1, piecesSize-1);
+
+                    if (trail[i].x == pointx && trail[i].y == pointy){
+                        speedx = speedy = 0;
+                        tail=5;
+                        self.score = 0;
+                    }
+                }
+
+                trail.push({x:pointx, y:pointy})
+                while (trail.length > tail) {
+                    trail.shift();
+                }
+
+                if (lemonadex == pointx && lemonadey == pointy){
+                    self.score ++;
+                    tail++;
+                    lemonadex = lemonadey = Math.floor(Math.random()*pieces);
+                }
+            }
+
+            let template = `
+                <div @ref="self.game(this)">
+                    <h1>Score:{{self.score}}</h1>
+                    <button onclick="self.reset()">Reset</button><br>
+                    <canvas id="stage" @ready="self.init(this)" width="400" height="400"></canvas>
+                </div>`;
+ 
+            return lemonade.element(template, self);
+        }
+        
+        lemonade.render(App, document.getElementById('root'));
+    
+    </script>
+    
+</body>
+</html>
