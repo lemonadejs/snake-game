@@ -1,12 +1,12 @@
 <html lang="en">
 <head>
-    <title>JSnake</title>
+    <title>LemonadeSnake</title>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <script src="https://lemonadejs.net/v1/lemonade.js"></script>
 
-    <div id="header">JSnake</div>
+    <div id="header">Lemonade - Snake</div>
     <div id="root"></div>
     
     <script type="text/javascript">
@@ -15,22 +15,29 @@
         
         function App() {
             
+            /* 
+            Constants and Variables that will be used throughout the application
+            */
             const speed = 1;
-
             var speedx = speedy = 0;
             var pointx = pointy = 10;
             var piecesSize = 20;
             var pieces = 20;
+            
+            /* 
+            Here we gonna define a random place in our stage to spawn the lemonade (game objective),
+            Using Math.floor(Math.random()*pieces) we can reach some place inside the stage.
+            */
             var lemonadex = lemonadey = Math.floor(Math.random()*pieces);
             var tail = 5;
             var trail = [];
             var context = null;
-        
+
+            /* 
+            Self.init is used to initialize some methods and functions.
+            */
             self.init = function(stage){
                 context = stage.getContext("2d");
-
-                context.fillStyle = "#cecece";                
-                context.fillRect(0,0, stage.width, stage.height);
 
                 document.addEventListener("keydown", function (o){
                     switch(o.keyCode){
@@ -60,6 +67,10 @@
 
             }
 
+
+            /* 
+            Self.reset it's the function used to reset the game and spawn the a new lemonade in the stage.
+            */
             self.reset = function(){
 
                 speedx = speedy = 0;
@@ -68,6 +79,9 @@
 
             }
 
+            /* 
+            Self.game it's the main responsable for the functioning of the game.
+            */
             self.game = function(){
 
                 pointx += speedx;
@@ -86,17 +100,26 @@
                     pointy = 0;
                 }
 
-
+                /* 
+                Here we setting the colors of our stage, snake and the objective.
+                context.fillRect() is used to locate were the fillStyle will be aplied.
+                */
                 context.fillStyle = "#cecece";                
                 context.fillRect(0,0, stage.width, stage.height);
                 
                 context.fillStyle = "green";
                 context.fillRect(lemonadex*piecesSize, lemonadey*piecesSize, piecesSize, piecesSize);
 
+                /* 
+                To have a controll of our snake size we used a for loop to calculate it.
+                */
                 context.fillStyle = "#6b6b6b";
                 for (var i = 0; i < trail.length; i++){
                     context.fillRect(trail[i].x*piecesSize, trail[i].y*piecesSize, piecesSize-1, piecesSize-1);
-
+                
+                    /* 
+                    Detecting collision.
+                    */
                     if (trail[i].x == pointx && trail[i].y == pointy){
                         speedx = speedy = 0;
                         tail=5;
@@ -109,6 +132,9 @@
                     trail.shift();
                 }
 
+                /* 
+                Collecting the objective increase our snake and set a new objective.
+                */
                 if (lemonadex == pointx && lemonadey == pointy){
                     self.score ++;
                     tail++;
@@ -126,6 +152,9 @@
             return lemonade.element(template, self);
         }
         
+        /* 
+        lemonade.render will render our app in the element where id = root.
+        */
         lemonade.render(App, document.getElementById('root'));
     
     </script>
