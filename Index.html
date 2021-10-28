@@ -23,15 +23,16 @@
             var pointx = pointy = 10;
             var piecesSize = 20;
             var pieces = 20;
+            var tail = 5;
+            var trail = [];
+            var context = null;
             
             /* 
             Here we gonna define a random place in our stage to spawn the lemonade (game objective),
             Using Math.floor(Math.random()*pieces) we can reach some place inside the stage.
             */
             var lemonadex = lemonadey = Math.floor(Math.random()*pieces);
-            var tail = 5;
-            var trail = [];
-            var context = null;
+            
 
             /* 
             Self.init is used to initialize some methods and functions.
